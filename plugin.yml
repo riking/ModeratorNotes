@@ -1,0 +1,6 @@
+name: ModeratorNotes
+version: 0.1
+description: Alert online staff about a player.
+authors: [R3creat3]
+main: com.oresomecraft.R3creat3.Notes
+prefix: ModNotes
