@@ -1,4 +1,4 @@
-package com.oresomecraft.R3creat3;
+package me.R3creat3;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
