@@ -1,5 +1,8 @@
 package me.R3creat3;
 
+import java.util.logging.Logger;
+import java.io.File;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
@@ -19,22 +22,65 @@ import com.sk89q.minecraft.util.commands.MissingNestedCommandException;
 import com.sk89q.minecraft.util.commands.SimpleInjector;
 import com.sk89q.minecraft.util.commands.WrappedCommandException;
 
-public class Notes extends JavaPlugin{
-    Notes plugin;
-    private CommandsManager<CommandSender> commands;
-    private boolean opPermissions;
-    public void onEnable(){
-        plugin = this;
+public class ModeratorNotes extends JavaPlugin {
+
+    ModeratorNotes plugin;
+    private Logger logger;
+
+    public ModeratorNotes(ModeratorNotes plugin) {
+        this.plugin = plugin;
+    }
+
+    public void onEnable() {
+        File config = new File(this.getDataFolder(), "config.yml");
+        if (!config.exists()) {
+            this.saveDefaultConfig();
+            this.getConfig().options().copyHeader(true);
+
+            log(0, "Config.yml created!");
+        }
+
         registerCommands();
-        System.out.println("ModeratorNotes enabled");
         PluginManager pm = Bukkit.getPluginManager();
         pm.registerEvents(new NoteListener(this), this);
+        log(0, "is enabled!");
     }
-    public void onDisable(){
-        System.out.println("ModeratorNotes disabled");
+
+    public void onDisable() {
+        log(0, "is disabled!");
     }
+
+    public void setLogger(java.util.logging.Logger logger) {
+        this.logger = logger;
+    }
+
+    public void log(int priority, String msg) {
+        if (logger != null) {
+            if (priority == 0) {
+                logger.info("[ " + plugin.getName() + " ] " + msg);
+            } else {
+                if (priority == 1) {
+                    logger.warning("[ " + plugin.getName() + " ] " + msg);
+                } else {
+                    if (priority == 2) {
+                        logger.severe("[ " + plugin.getName() + " ] " + msg);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * *******************************************************************
+     * Code to use for sk89q's command framework goes below this comment! *
+     * ********************************************************************
+     */
+
+    private CommandsManager<CommandSender> commands;
+    private boolean opPermissions;
+
     private void registerCommands() {
-        final Notes plugin = this;
+        final ModeratorNotes plugin = this;
         // Register the commands that we want to use
         commands = new CommandsManager<CommandSender>() {
             @Override
@@ -45,14 +91,12 @@ public class Notes extends JavaPlugin{
         commands.setInjector(new SimpleInjector(this));
         final CommandsManagerRegistration cmdRegister = new CommandsManagerRegistration(this, commands);
 
-
         cmdRegister.register(Commands.class);
     }
 
-    public boolean onCommand(CommandSender sender, Command cmd, String label,
-            String[] args) {
+    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         try {
-            commands.execute((cmd).getName(), args, sender, sender);
+            commands.execute(cmd.getName(), args, sender, sender);
         } catch (CommandPermissionsException e) {
             sender.sendMessage(ChatColor.RED + "You don't have permission.");
         } catch (MissingNestedCommandException e) {
@@ -91,15 +135,13 @@ public class Notes extends JavaPlugin{
         return false;
     }
 
-    public void checkPermission(CommandSender sender, String perm)
-            throws CommandPermissionsException {
+    public void checkPermission(CommandSender sender, String perm) throws CommandPermissionsException {
         if (!hasPermission(sender, perm)) {
             throw new CommandPermissionsException();
         }
     }
 
-    public void checkPermission(CommandSender sender, World world, String perm)
-            throws CommandPermissionsException {
+    public void checkPermission(CommandSender sender, World world, String perm) throws CommandPermissionsException {
         if (!hasPermission(sender, world, perm)) {
             throw new CommandPermissionsException();
         }
