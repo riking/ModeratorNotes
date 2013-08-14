@@ -48,6 +48,24 @@ public class Commands {
         }
     }
 
+    @Command(aliases = {"find", "findnote"},
+            min = 1,
+            max = 1,
+            desc = "Find notes about a player",
+            usage = "<player>")
+    @CommandPermissions("notes.find")
+    public void find(CommandContext args, CommandSender sender) {
+        if (plugin.getConfig().contains(args.getString(0))) {
+            String target = args.getString(0);
+            sender.sendMessage(ChatColor.RED + "Notes for " + target + ": ");
+            sender.sendMessage(ChatColor.RED + plugin.getConfig().getString(target + ".alert"));
+            log(0, sender.getName() + " looked up notes for " + target);
+            plugin.saveConfig();
+        } else {
+            sender.sendMessage(ChatColor.RED + "There are no notes about this player!");
+        }
+    }
+
     public void setLogger(java.util.logging.Logger logger) {
         this.logger = logger;
     }

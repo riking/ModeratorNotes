@@ -6,7 +6,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-import me.R3creat3.ModeratorNotes;
 
 import java.util.logging.Logger;
 
@@ -25,6 +24,7 @@ public class NoteListener implements Listener {
         if (plugin.getConfig().contains(target)) {
             log(1, "ALERT: " + target + " has a note attached!");
             log(1, plugin.getConfig().getString(target + ".alert"));
+
             for (Player p : Bukkit.getOnlinePlayers()) {
                 if (p.hasPermission("notes.alert")) {
                     p.sendMessage(ChatColor.RED + "ALERT: " + target + " has a note attached!");

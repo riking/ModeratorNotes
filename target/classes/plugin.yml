@@ -2,5 +2,8 @@ name: ModeratorNotes
 version: 0.1
 description: Alert online staff about a player.
 authors: [R3creat3]
-main: com.oresomecraft.R3creat3.Notes
+main: me.R3creat3.ModeratorNotes
 prefix: ModNotes
+depend: [WorldEdit]
+
+# Commands aren't defined here, as sk89q's command framework is being used!
